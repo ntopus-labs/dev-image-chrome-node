@@ -22,10 +22,10 @@ help: ## This help.
 # DOCKER TASKS
 # Build the container
 build: ## Build the container
-	docker build -t $(APP_FRONT_NAME) ./
+	docker build -t $(CONTAINER_NAME) ./
 
 build-nc: ## Build the container without caching
-	docker build --no-cache -t $(APP_FRONT_NAME) ./
+	docker build --no-cache -t $(CONTAINER_NAME) ./
 
 run: ## Run container on port configured
 	source $(dpl) && ./run.sh
@@ -33,7 +33,7 @@ run: ## Run container on port configured
 up: build run ## Run container on port  80 (Build and run)
 
 stop: ## Stop and remove a running container
-	docker stop $(APP_FRONT_NAME); docker rm $(APP_FRONT_NAME)
+	docker stop $(CONTAINER_NAME); docker rm $(CONTAINER_NAME)
 
 release: build-nc publish ## Make a release by building and publishing the `{version}` ans `latest` tagged containers to ECR
 
@@ -41,32 +41,32 @@ publish: publish-version-major publish-version-minor publish-version-patch publi
 
 publish-version-alias: tag-version-alias ## Publish the `alias` taged container to ECR
 	@echo 'publish alias to $(DOCKER_REPO)'
-	docker push $(DOCKER_REPO)/$(GROUP_NAME)/$(APP_FRONT_NAME):$(VERSION_ALIAS)
+	docker push $(DOCKER_REPO)/$(GROUP_NAME)/$(CONTAINER_NAME):$(VERSION_ALIAS)
 
 tag-version-alias: ## Generate container `alias` tag
 	@echo 'create tag alias'
-	docker tag $(APP_FRONT_NAME) $(DOCKER_REPO)/$(GROUP_NAME)/$(APP_FRONT_NAME):$(VERSION_ALIAS)
+	docker tag $(CONTAINER_NAME) $(DOCKER_REPO)/$(GROUP_NAME)/$(CONTAINER_NAME):$(VERSION_ALIAS)
 
 publish-version-major: tag-version-major ## Publish the `major` taged container to ECR
 	@echo 'publish major to $(DOCKER_REPO)'
-	docker push $(DOCKER_REPO)/$(GROUP_NAME)/$(APP_FRONT_NAME):$(VERSION_MAJOR)
+	docker push $(DOCKER_REPO)/$(GROUP_NAME)/$(CONTAINER_NAME):$(VERSION_MAJOR)
 
 tag-version-major: ## Generate container `major` tag
 	@echo 'create tag major'
-	docker tag $(APP_FRONT_NAME) $(DOCKER_REPO)/$(GROUP_NAME)/$(APP_FRONT_NAME):$(VERSION_MAJOR)
+	docker tag $(CONTAINER_NAME) $(DOCKER_REPO)/$(GROUP_NAME)/$(CONTAINER_NAME):$(VERSION_MAJOR)
 
 publish-version-minor: tag-version-minor ## Publish the `minor` taged container to ECR
 	@echo 'publish minor to $(DOCKER_REPO)'
-	docker push $(DOCKER_REPO)/$(GROUP_NAME)/$(APP_FRONT_NAME):$(BASE_VERSION)
+	docker push $(DOCKER_REPO)/$(GROUP_NAME)/$(CONTAINER_NAME):$(BASE_VERSION)
 
 tag-version-minor: ## Generate container `minor` tag
 	@echo 'create tag minor'
-	docker tag $(APP_FRONT_NAME) $(DOCKER_REPO)/$(GROUP_NAME)/$(APP_FRONT_NAME):$(BASE_VERSION)
+	docker tag $(CONTAINER_NAME) $(DOCKER_REPO)/$(GROUP_NAME)/$(CONTAINER_NAME):$(BASE_VERSION)
 
 publish-version-patch: tag-version-patch ## Publish the `patch` taged container to ECR
 	@echo 'publish patch to $(DOCKER_REPO)'
-	docker push $(DOCKER_REPO)/$(GROUP_NAME)/$(APP_FRONT_NAME):$(VERSION)
+	docker push $(DOCKER_REPO)/$(GROUP_NAME)/$(CONTAINER_NAME):$(VERSION)
 
 tag-version-patch: ## Generate container `patch` tag
 	@echo 'create tag patch'
-	docker tag $(APP_FRONT_NAME) $(DOCKER_REPO)/$(GROUP_NAME)/$(APP_FRONT_NAME):$(VERSION)
+	docker tag $(CONTAINER_NAME) $(DOCKER_REPO)/$(GROUP_NAME)/$(CONTAINER_NAME):$(VERSION)
